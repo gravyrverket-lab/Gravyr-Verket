@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gravyrverket – Lasergravyr för restauranger, barer & hotell</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f2ee;
+      --bg-alt: #edeae5;
+      --surface: #ffffff;
+      --text: #1e1c1a;
+      --text-muted: #6b6560;
+      --accent: #1e1c1a;
+      --accent-light: #3d3a37;
+      --accent-bg: #f0efee;
+      --border: #ddd8d2;
+      --radius: 10px;
+      --max: 1100px;
+      --font-display: 'DM Serif Display', serif;
+      --font-body: 'DM Sans', sans-serif;
+      --shadow: 0 2px 16px rgba(0,0,0,0.07);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; font-size: 16px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(245,242,238,0.94); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+    }
+    .nav-inner {
+      max-width: var(--max); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo { font-family: var(--font-display); font-size: 1.4rem; color: var(--accent); text-decoration: none; letter-spacing: -0.01em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent); color: #fff; border: none; border-radius: 6px;
+      padding: 0.5rem 1.2rem; font-family: var(--font-body); font-size: 0.88rem;
+      font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-light); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+    .mobile-menu {
+      display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; z-index: 99;
+      background: var(--bg); padding: 2rem 1.5rem; flex-direction: column; gap: 1.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-size: 1.2rem; font-weight: 500; color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+    .mobile-menu a:hover { color: var(--accent); }
+    .mobile-menu .nav-cta { align-self: flex-start; font-size: 1rem; padding: 0.75rem 1.5rem; }
+
+    @media (max-width: 720px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; padding: 100px 1.5rem 80px;
+      display: flex; align-items: center;
+      background: linear-gradient(135deg, #f5f2ee 55%, #efe7dc 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -120px; right: -120px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(30,28,26,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-inner { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; width: 100%; }
+    .hero-badge { display: inline-block; background: var(--accent-bg); color: var(--accent); border: 1px solid rgba(30,28,26,0.2); border-radius: 30px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1.2rem; }
+    .hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.15; color: var(--text); margin-bottom: 1.2rem; letter-spacing: -0.02em; }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 480px; margin-bottom: 2rem; line-height: 1.75; }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary { background: var(--accent); color: #fff; padding: 0.85rem 1.8rem; border-radius: 8px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: background 0.2s, transform 0.15s; display: inline-block; }
+    .btn-primary:hover { background: var(--accent-light); transform: translateY(-1px); }
+    .btn-outline { border: 1.5px solid var(--accent); color: var(--accent); padding: 0.85rem 1.8rem; border-radius: 8px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.2s; display: inline-block; }
+    .btn-outline:hover { background: var(--accent-bg); }
+    .hero-img { border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); aspect-ratio: 4/3; }
+    .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-img { order: -1; max-height: 280px; }
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 1.5rem; }
+    .container { max-width: var(--max); margin: 0 auto; }
+    .section-label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem); color: var(--text); line-height: 1.2; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .section-intro { color: var(--text-muted); font-size: 1.05rem; max-width: 580px; line-height: 1.8; }
+
+    /* ── WHAT IS ── */
+    .what-is { background: var(--surface); }
+    .what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .what-img { border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); aspect-ratio: 3/2; }
+    .what-img img { width: 100%; height: 100%; object-fit: cover; }
+    .what-features { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+    .what-feat { display: flex; gap: 1rem; align-items: flex-start; }
+    .what-feat-icon { width: 40px; height: 40px; min-width: 40px; background: var(--accent-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .what-feat h4 { font-weight: 600; margin-bottom: 0.25rem; font-size: 0.95rem; }
+    .what-feat p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+    @media (max-width: 768px) {
+      .what-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    /* ── USE CASES ── */
+    .usecases { background: var(--bg-alt); }
+    .uc-header { text-align: center; margin-bottom: 3rem; }
+    .uc-header .section-intro { margin: 0 auto; }
+    .uc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .uc-card { background: var(--surface); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.25s, box-shadow 0.25s; }
+    .uc-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .uc-img { aspect-ratio: 16/9; overflow: hidden; }
+    .uc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .uc-card:hover .uc-img img { transform: scale(1.04); }
+    .uc-body { padding: 1.5rem; }
+    .uc-tag { display: inline-block; background: var(--accent-bg); color: var(--accent); font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.7rem; border-radius: 20px; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .uc-body h3 { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.6rem; }
+    .uc-body ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .uc-body ul li { font-size: 0.88rem; color: var(--text-muted); padding-left: 1.2rem; position: relative; }
+    .uc-body ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.8rem; }
+
+    @media (max-width: 900px) { .uc-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 580px) { .uc-grid { grid-template-columns: 1fr; } }
+
+    /* ── GALLERY ── */
+    .gallery { background: var(--bg); }
+    .gallery-header { text-align: center; margin-bottom: 2.5rem; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 220px 220px;
+      gap: 1rem;
+    }
+    .gallery-item { border-radius: 12px; overflow: hidden; cursor: zoom-in; position: relative; }
+    .gallery-item:first-child { grid-row: span 2; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; display: block; }
+    .gallery-item:hover img { transform: scale(1.05); }
+    .gallery-item::after { content: ''; position: absolute; inset: 0; background: rgba(30,28,26,0); transition: background 0.3s; }
+    .gallery-item:hover::after { background: rgba(30,28,26,0.1); }
+
+    @media (max-width: 640px) {
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery-item:first-child { grid-row: auto; }
+    }
+
+    /* ── PRICING ── */
+    .pricing { background: var(--surface); }
+    .pricing-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .pricing-steps { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 2rem; }
+    .step { display: flex; gap: 1.2rem; align-items: flex-start; }
+    .step-num { width: 36px; height: 36px; min-width: 36px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+    .step-body h4 { font-weight: 600; margin-bottom: 0.2rem; font-size: 0.95rem; }
+    .step-body p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+    .pricing-note { margin-top: 2rem; background: var(--accent-bg); border-left: 3px solid var(--accent); border-radius: 6px; padding: 1rem 1.25rem; font-size: 0.88rem; color: var(--text-muted); }
+    .pricing-img { border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); aspect-ratio: 4/5; }
+    .pricing-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    @media (max-width: 768px) {
+      .pricing-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .pricing-img { aspect-ratio: 16/9; }
+    }
+
+    /* ── CONTACT ── */
+    .contact { background: linear-gradient(135deg, #f0ebe4 0%, #f8f4ef 100%); }
+    .contact-inner { display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; align-items: start; }
+    .contact-info h2 { margin-bottom: 1rem; }
+    .contact-info p { color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem; }
+    .contact-detail { display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem; color: var(--text-muted); }
+    .contact-detail a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .contact-detail a:hover { text-decoration: underline; }
+    .form-card { background: var(--surface); border-radius: 16px; padding: 2.5rem; box-shadow: var(--shadow-lg); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.1rem; }
+    .form-group label { font-size: 0.82rem; font-weight: 600; color: var(--text); letter-spacing: 0.02em; }
+    .form-group input, .form-group select, .form-group textarea {
+      border: 1.5px solid var(--border); border-radius: 8px; padding: 0.7rem 0.9rem;
+      font-family: var(--font-body); font-size: 0.9rem; background: var(--bg);
+      color: var(--text); transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192,98,42,0.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+    .form-submit { width: 100%; padding: 0.9rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-family: var(--font-body); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+    .form-submit:hover { background: var(--accent-light); transform: translateY(-1px); }
+    .form-success { text-align: center; padding: 2rem; display: none; }
+    .form-success .check { font-size: 3rem; margin-bottom: 1rem; }
+    .form-success h3 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .form-success p { color: var(--text-muted); }
+
+    @media (max-width: 900px) { .contact-inner { grid-template-columns: 1fr; gap: 2rem; } }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* ── FOOTER ── */
+    footer { background: var(--text); color: rgba(255,255,255,0.7); padding: 2.5rem 1.5rem; }
+    .footer-inner { max-width: var(--max); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: var(--font-display); font-size: 1.3rem; color: #fff; }
+    .footer-email a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; }
+    .footer-email a:hover { color: var(--accent-light); }
+    .footer-copy { font-size: 0.8rem; }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Gravyrverket</a>
+    <ul class="nav-links">
+      <li><a href="#vad-ar">Om gravyr</a></li>
+      <li><a href="#anvandningsomraden">Branscher</a></li>
+      <li><a href="#galleri">Galleri</a></li>
+      <li><a href="#priser">Priser</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+    <a href="#kontakt" class="nav-cta">Begär offert</a>
+    <button class="hamburger" id="hamburger" aria-label="Öppna meny">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#vad-ar" onclick="closeMobileMenu()">Om gravyr</a>
+  <a href="#anvandningsomraden" onclick="closeMobileMenu()">Branscher</a>
+  <a href="#galleri" onclick="closeMobileMenu()">Galleri</a>
+  <a href="#priser" onclick="closeMobileMenu()">Priser</a>
+  <a href="#kontakt" onclick="closeMobileMenu()">Kontakt</a>
+  <a href="#kontakt" class="nav-cta" onclick="closeMobileMenu()">Begär offert</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="hero-badge">Lasergravyr för företag</span>
+      <h1>Ge ditt varumärke ett <em>bestående intryck</em></h1>
+      <p>Vi lasergraverar glas, trä, läder och metall för restauranger, barer, caféer och hotell. Snabbt, noggrant och till ett rättvist pris.</p>
+      <div class="hero-btns">
+        <a href="#kontakt" class="btn-primary">Begär gratis offert</a>
+        <a href="#vad-ar" class="btn-outline">Läs mer</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <img src="https://images.unsplash.com/photo-1628078170480-a571d292e3c8?w=900&auto=format&fit=crop&q=80" alt="Lasergravyrmaskin i arbete" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- VAD ÄR LASERGRAVYR -->
+<section class="what-is" id="vad-ar">
+  <div class="container">
+    <div class="what-grid">
+      <div class="what-img reveal">
+        <img src="https://images.unsplash.com/photo-1628078198072-41e55a3517b2?w=800&auto=format&fit=crop&q=80" alt="Graverat glas med logotyp" loading="lazy" />
+      </div>
+      <div class="reveal reveal-delay-1">
+        <p class="section-label">Vad är lasergravyr?</p>
+        <h2 class="section-title">Professionell märkning som håller</h2>
+        <p class="section-intro">Lasergravyr bränner in din logotyp, ditt namn eller ditt budskap direkt i materialet – utan klistermärken eller bläck. Resultatet syns och håller länge.</p>
+        <div class="what-features">
+          <div class="what-feat">
+            <div class="what-feat-icon">✦</div>
+            <div>
+              <h4>Varaktig kvalitet</h4>
+              <p>Graveringen slits inte och bleknar inte. Den sitter kvar hur många diskmaskinscyklar som helst.</p>
+            </div>
+          </div>
+          <div class="what-feat">
+            <div class="what-feat-icon">◎</div>
+            <div>
+              <h4>Stärker ditt varumärke</h4>
+              <p>Kunder lägger märke till detaljer. En graverad flasköppnare eller ett märkt glas ger en professionell känsla.</p>
+            </div>
+          </div>
+          <div class="what-feat">
+            <div class="what-feat-icon">✿</div>
+            <div>
+              <h4>Fungerar på många material</h4>
+              <p>Glas, trä, läder, metall och plast – vi anpassar oss efter vad du behöver.</p>
+            </div>
+          </div>
+          <div class="what-feat">
+            <div class="what-feat-icon">⟳</div>
+            <div>
+              <h4>Enkelt att beställa</h4>
+              <p>Skicka din logotyp, välj antal och vi sköter resten. Ingen krånglig process.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANVÄNDNINGSOMRÅDEN -->
+<section class="usecases" id="anvandningsomraden">
+  <div class="container">
+    <div class="uc-header reveal">
+      <p class="section-label">Branscher vi hjälper</p>
+      <h2 class="section-title">Passar din verksamhet</h2>
+      <p class="section-intro">Oavsett om du driver en restaurang, bar, café eller ett hotell – vi har lösningar som passar dig.</p>
+    </div>
+    <div class="uc-grid">
+      <div class="uc-card reveal">
+        <div class="uc-img">
+          <img src="https://images.unsplash.com/photo-1628078170762-8a3b2c2d8d13?w=700&auto=format&fit=crop&q=80" alt="Lasergravyr på trä" loading="lazy" />
+        </div>
+        <div class="uc-body">
+          <span class="uc-tag">Restauranger</span>
+          <h3>Restauranger</h3>
+          <ul>
+            <li>Graverade menypärmar i trä eller läder</li>
+            <li>Märkta knivar och serveringsredskap</li>
+            <li>Anpassade träbrickor och serveringsbräden</li>
+            <li>Bordsnamn och numrering i trä</li>
+          </ul>
+        </div>
+      </div>
+      <div class="uc-card reveal reveal-delay-1">
+        <div class="uc-img">
+          <img src="https://images.unsplash.com/photo-1628078170602-feacab385a13?w=700&auto=format&fit=crop&q=80" alt="Lasergravyr närbild" loading="lazy" />
+        </div>
+        <div class="uc-body">
+          <span class="uc-tag">Barer & caféer</span>
+          <h3>Barer & caféer</h3>
+          <ul>
+            <li>Logotyp på dricksglas och ölglas</li>
+            <li>Graverade flasköppnare och burköppnare</li>
+            <li>Märkta ölkannor och shakers</li>
+            <li>Anpassade skyltar i trä</li>
+          </ul>
+        </div>
+      </div>
+      <div class="uc-card reveal reveal-delay-2">
+        <div class="uc-img">
+          <img src="https://images.unsplash.com/photo-1628078170065-ff206b224ddd?w=700&auto=format&fit=crop&q=80" alt="Lasergravyr process" loading="lazy" />
+        </div>
+        <div class="uc-body">
+          <span class="uc-tag">Hotell</span>
+          <h3>Hotell</h3>
+          <ul>
+            <li>Graverade rumsnycklar och nyckelringar i läder</li>
+            <li>Välkomstskylt med gästens namn</li>
+            <li>Märkta amenities-brickor</li>
+            <li>Anpassade menypärmar till rum och restaurang</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERI -->
+<section class="gallery" id="galleri">
+  <div class="container">
+    <div class="gallery-header reveal">
+      <p class="section-label">Galleri</p>
+      <h2 class="section-title">Exempel på gravyrer</h2>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1628078170480-a571d292e3c8?w=800&auto=format&fit=crop&q=80" alt="Lasergravyrmaskin" loading="lazy" />
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1628078198072-41e55a3517b2?w=700&auto=format&fit=crop&q=80" alt="Graverad träyta närbild" loading="lazy" />
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1628078170096-4ca7fe62201a?w=700&auto=format&fit=crop&q=80" alt="Lasergravyr på material" loading="lazy" />
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1628078061415-c26d5aadfed3?w=700&auto=format&fit=crop&q=80" alt="Lasermaskin i drift" loading="lazy" />
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1628078169477-c60404d5ef05?w=700&auto=format&fit=crop&q=80" alt="Graverad detalj" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRISER -->
+<section class="pricing" id="priser">
+  <div class="container">
+    <div class="pricing-inner">
+      <div class="reveal">
+        <p class="section-label">Hur det fungerar</p>
+        <h2 class="section-title">Enkel och transparent prissättning</h2>
+        <p class="section-intro">Vi ger alltid en offert innan vi kör igång. Priset beror på antal, material och design – men vi hjälper dig hitta det som passar din budget.</p>
+        <div class="pricing-steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Berätta vad du behöver</h4>
+              <p>Fyll i kontaktformuläret med material, antal och vad du vill ha graverat.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Vi skickar en offert</h4>
+              <p>Inom 1–2 arbetsdagar får du ett prisförslag utan förpliktelse.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Vi producerar och levererar</h4>
+              <p>Godkänner du offerten sätter vi igång. Leveranstid varierar beroende på beställningens storlek.</p>
+            </div>
+          </div>
+        </div>
+        <div class="pricing-note">
+          💡 Ju fler du beställer, desto lägre blir styckpriset. Hör av dig så räknar vi på just din beställning.
+        </div>
+      </div>
+      <div class="pricing-img reveal reveal-delay-1">
+        <img src="https://images.unsplash.com/photo-1628078170774-7c7aa64b91b7?w=700&auto=format&fit=crop&q=80" alt="Lasergravyr på produkt" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section class="contact" id="kontakt">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="reveal">
+        <p class="section-label">Kontakta oss</p>
+        <h2 class="section-title">Begär en gratis offert</h2>
+        <p>Har du frågor eller vill du komma igång? Fyll i formuläret så hör vi av oss inom 1–2 arbetsdagar.</p>
+        <div class="contact-detail">
+          <span>✉</span>
+          <a href="mailto:gravyrverket@gmail.com">gravyrverket@gmail.com</a>
+        </div>
+      </div>
+      <div class="form-card reveal reveal-delay-1">
+        <form action="https://formspree.io/f/xdayqqde" method="POST">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Namn</label>
+              <input type="text" id="name" name="name" placeholder="Ditt namn" required />
+            </div>
+            <div class="form-group">
+              <label for="email">E-post</label>
+              <input type="email" id="email" name="email" placeholder="din@email.se" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="company">Företag / Verksamhet</label>
+            <input type="text" id="company" name="company" placeholder="T.ex. Restaurang Örnen" />
+          </div>
+          <div class="form-group">
+            <label for="type">Typ av verksamhet</label>
+            <select id="type" name="type">
+              <option value="">Välj kategori…</option>
+              <option>Restaurang</option>
+              <option>Bar</option>
+              <option>Café</option>
+              <option>Hotell</option>
+              <option>Annat</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Berätta vad du behöver</label>
+            <textarea id="message" name="message" placeholder="T.ex. 50 ölglas med logotyp, eller menypärmar i läder med guldtext…" required></textarea>
+          </div>
+          <button type="submit" class="form-submit">Skicka förfrågan →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">Gravyrverket</span>
+    <span class="footer-email"><a href="mailto:gravyrverket@gmail.com">gravyrverket@gmail.com</a></span>
+    <span class="footer-copy">© 2025 Gravyrverket. Alla rättigheter förbehålls.</span>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Contact form
+</script>
+</body>
+</html>
